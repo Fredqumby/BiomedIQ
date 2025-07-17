@@ -309,43 +309,38 @@ async function loadCourseQuestionCounts() {
     await courseLoader.clearBrowserCache();
     courseLoader.ensureCourseSpecificity();
     
-    for (const courseKey of Object.keys(courses)) {
-        try {
-            const questions = await courseLoader.loadCourse(courseKey);
-            const questionCount = questions.length;
-            
-            if (!courseProgress[courseKey]) {
-                courseProgress[courseKey] = {
-                    attempts: 0,
-                    highestScore: 0,
-                    lastScore: 0,
-                    completion: 0,
-                    correctCompletion: 0,
-                    answered: 0,
-                    total: questionCount
-                };
-            } else {
-                courseProgress[courseKey].total = questionCount;
-            }
-            
-        } catch (error) {
-            if (!courseProgress[courseKey]) {
-                courseProgress[courseKey] = {
-                    attempts: 0,
-                    highestScore: 0,
-                    lastScore: 0,
-                    completion: 0,
-                    correctCompletion: 0,
-                    answered: 0,
-                    total: 0
-                };
-            } else {
-                courseProgress[courseKey].total = 0;
-            }
-        }
-    }
+    // First render courses with cached data
+    renderCourses();
     
-    saveCourseProgress();
+    // Then load course data in the background
+    Object.keys(courses).forEach(courseKey => {
+        // Initialize with default values if needed
+        if (!courseProgress[courseKey]) {
+            courseProgress[courseKey] = {
+                attempts: 0,
+                highestScore: 0,
+                lastScore: 0,
+                completion: 0,
+                correctCompletion: 0,
+                answered: 0,
+                total: 0
+            };
+        }
+        
+        // Load course data asynchronously
+        courseLoader.loadCourse(courseKey).then(questions => {
+            const questionCount = questions.length;
+            courseProgress[courseKey].total = questionCount;
+            saveCourseProgress();
+            // Update just this course card
+            updateCourseCard(courseKey);
+        }).catch(error => {
+            courseProgress[courseKey].total = 0;
+            saveCourseProgress();
+            // Update just this course card
+            updateCourseCard(courseKey);
+        });
+    });
 }
 
 // Load course progress from localStorage
@@ -502,6 +497,7 @@ async function startCourse(courseKey, action) {
     if (courseLoadingTitle) courseLoadingTitle.textContent = `Loading ${courses[courseKey].name}...`;
     if (mainContainer) mainContainer.classList.add('hidden');
     
+    // Reduced timeout from default to 500ms for faster course loading
     setTimeout(async () => {
         try {
             if (courseNameElement) courseNameElement.textContent = `Course: ${courses[courseKey].name}`;
@@ -555,7 +551,7 @@ async function startCourse(courseKey, action) {
             alert(`Failed to load ${courses[courseKey].name}: ${error.message}`);
             showStartScreen();
         }
-    }, 1500);
+    }, 500);
 }
 
 
@@ -1132,6 +1128,7 @@ function startFromWelcome() {
         console.log('Loading screen shown');
     }
     
+    // Reduced timeout from 2000ms to 500ms for faster transition
     setTimeout(async () => {
         if (loadingEl) {
             loadingEl.classList.add('hidden');
@@ -1150,7 +1147,89 @@ function startFromWelcome() {
         
         await initAcademy();
         console.log('Academy initialized');
-    }, 2000);
+    }, 500);
+}
+
+// Update a single course card
+function updateCourseCard(courseKey) {
+    if (!coursesContainer) return;
+    
+    const course = courses[courseKey];
+    const progress = courseProgress[courseKey];
+    
+    // Find the existing card
+    const existingCard = Array.from(coursesContainer.children).find(card => {
+        const cardTitle = card.querySelector('h3')?.textContent;
+        return cardTitle === course.name;
+    });
+    
+    if (existingCard) {
+        const questionCount = progress.total || 0;
+        const questionText = questionCount === 1 ? 'question' : 'questions';
+        const courseStatus = questionCount > 0 ? 'Available' : 'No questions available';
+        const hasProgress = progress.answered > 0;
+        const isCompleted = progress.completion >= 100;
+        
+        // Update question count
+        const questionCountEl = existingCard.querySelector('.text-xs.text-gray-500');
+        if (questionCountEl) questionCountEl.textContent = `${questionCount} ${questionText}`;
+        
+        // Update status
+        const statusEl = existingCard.querySelector('.text-xs.text-green-400, .text-xs.text-red-400');
+        if (statusEl) {
+            statusEl.textContent = courseStatus;
+            statusEl.className = `text-xs ${questionCount > 0 ? 'text-green-400' : 'text-red-400'} mb-1`;
+        }
+        
+        // Update buttons
+        const actionsContainer = existingCard.querySelector('.course-actions');
+        if (actionsContainer) {
+            actionsContainer.innerHTML = `
+                ${questionCount === 0 ? `
+                    <button class="course-btn btn-disabled" disabled>
+                        <i class="fas fa-exclamation-triangle mr-1"></i> No Questions
+                    </button>
+                ` : isCompleted ? `
+                    <button class="course-btn btn-restart" data-action="restart">
+                        <i class="fas fa-redo mr-1"></i> Restart
+                    </button>
+                ` : hasProgress ? `
+                    <button class="course-btn btn-continue" data-action="continue">
+                        <i class="fas fa-play mr-1"></i> Continue
+                    </button>
+                    <button class="course-btn btn-restart" data-action="restart">
+                        <i class="fas fa-redo mr-1"></i> Restart
+                    </button>
+                ` : `
+                    <button class="course-btn btn-start" data-action="start">
+                        <i class="fas fa-play mr-1"></i> Start
+                    </button>
+                `}
+            `;
+            
+            // Re-attach event listeners
+            actionsContainer.querySelectorAll('.course-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const action = btn.dataset.action;
+                    
+                    if (action === 'restart') {
+                        if (questionCount > 0) {
+                            restartCourseProgress(courseKey);
+                        } else {
+                            alert(`Cannot restart ${course.name} - no questions available.`);
+                        }
+                    } else {
+                        if (questionCount > 0) {
+                            startCourse(courseKey, action);
+                        } else {
+                            alert(`Cannot start ${course.name} - no questions available.\nPlease check that courses/${courseKey}.js exists and contains valid questions.`);
+                        }
+                    }
+                });
+            });
+        }
+    }
 }
 
 // Initialize academy on load
