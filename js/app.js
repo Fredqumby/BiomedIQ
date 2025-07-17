@@ -232,10 +232,10 @@ function setupEventListeners() {
     if (closeTerms) closeTerms.addEventListener('click', () => closeModal('terms'));
     
     // Top nav buttons
-    if (aboutBtn) aboutBtn.addEventListener('click', () => window.location.href = 'pages/about.html');
-    if (policyBtn) policyBtn.addEventListener('click', () => window.location.href = 'pages/policy.html');
-    if (disclaimerBtn) disclaimerBtn.addEventListener('click', () => window.location.href = 'pages/disclaimer.html');
-    if (termsBtn) termsBtn.addEventListener('click', () => window.location.href = 'pages/terms.html');
+    if (aboutBtn) aboutBtn.addEventListener('click', () => window.location.href = '/pages/about.html');
+    if (policyBtn) policyBtn.addEventListener('click', () => window.location.href = '/pages/policy.html');
+    if (disclaimerBtn) disclaimerBtn.addEventListener('click', () => window.location.href = '/pages/disclaimer.html');
+    if (termsBtn) termsBtn.addEventListener('click', () => window.location.href = '/pages/terms.html');
     
     // Quiz navigation
     if (nextBtn) nextBtn.addEventListener('click', nextQuestion);
