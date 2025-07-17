@@ -412,7 +412,6 @@ body.light-theme {
     gap: 15px;
     margin-top: 20px;
 }
-}
 
 @media (min-width: 768px) {
     .options-container {
@@ -858,7 +857,7 @@ body.modal-open {
 }
 
 .welcome-subtitle {
-    font-size: 0.5rem;
+    font-size: 1.1rem;
     color: #cbd5e1;
     margin-bottom: 1.5rem;
     line-height: 1.4;
@@ -957,7 +956,7 @@ body.modal-open {
     }
     
     .welcome-subtitle {
-        font-size: 0.75rem;
+        font-size: 0.95rem;
         margin-bottom: 0.6rem;
     }
     

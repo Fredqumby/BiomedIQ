@@ -2,7 +2,7 @@
 class CourseLoader {
     constructor() {
         this.courseFiles = {
-            'human_anatomy': 'data/human_anatomy.js',
+            'human_anatomy': 'courses/human_anatomy.js',
             'bioinformatics': 'courses/bioinformatics.js',
             'biostatistics': 'courses/biostatistics.js',
             'cell_biology': 'courses/cell_biology.js',
@@ -10,7 +10,7 @@ class CourseLoader {
             'hematology': 'courses/hematology.js',
             'histology': 'courses/histology.js',
             'human_physiology': 'courses/human_physiology.js',
-            'immunology': 'data/immunology.js',
+            'immunology': 'courses/immunology.js',
             'microbiology': 'courses/microbiology.js',
             'molecular_biology': 'courses/molecular_biology.js',
             'parasitology': 'courses/parasitology.js',
