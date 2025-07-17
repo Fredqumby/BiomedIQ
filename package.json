@@ -1,0 +1,21 @@
+{
+  "name": "biomediq",
+  "version": "1.0.0",
+  "description": "An interactive educational platform for biomedical science learning",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve",
+    "build": "echo 'No build step required'"
+  },
+  "keywords": [
+    "biomedical",
+    "education",
+    "quiz",
+    "learning"
+  ],
+  "author": "Dagadu Clement Selorm",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.0.0"
+  }
+}

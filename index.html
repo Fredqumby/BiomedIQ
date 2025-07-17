@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>biomedIQ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#60a5fa',
+                        dark: '#1e293b',
+                        accent: '#8b5cf6',
+                        success: '#10b981',
+                        danger: '#ef4444',
+                        lightText: '#1e293b',
+                        lightBg: '#f0f9ff'
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Welcome Screen -->
+    <div id="welcome-screen" class="welcome-screen">
+        <div class="welcome-content">
+            <div class="logo-container-welcome">
+                <div class="logo-icon-welcome">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h1 class="logo-text-welcome">biomed<span class="text-purple-400">IQ</span></h1>
+            </div>
+            
+            <h2 class="welcome-title">Welcome to Your Learning Journey</h2>
+            <p class="welcome-subtitle">Master biomedical sciences through interactive courses, track your progress, and achieve excellence in medical education.</p>
+            
+            <div class="slideshow-container">
+                <div class="slide active">
+                    <div class="slide-icon">
+                        <i class="fas fa-microscope"></i>
+                    </div>
+                    <h3>Advanced Learning</h3>
+                    <p>Comprehensive courses designed by experts</p>
+                </div>
+                <div class="slide">
+                    <div class="slide-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Progress Tracking</h3>
+                    <p>Monitor your learning journey with detailed analytics</p>
+                </div>
+                <div class="slide">
+                    <div class="slide-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3>Achieve Excellence</h3>
+                    <p>Build expertise in biomedical sciences</p>
+                </div>
+            </div>
+            
+            <button id="start-quiz-btn" class="start-btn">
+                <span class="btn-text">Start Learning</span>
+                <i class="fas fa-arrow-right ml-2"></i>
+            </button>
+        </div>
+        
+        <div class="floating-elements">
+            <div class="floating-element" style="top: 15%; left: 8%;"><i class="fas fa-dna"></i></div>
+            <div class="floating-element" style="top: 70%; right: 12%;"><i class="fas fa-heartbeat"></i></div>
+            <div class="floating-element" style="bottom: 25%; left: 15%;"><i class="fas fa-atom"></i></div>
+        </div>
+    </div>
+    
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen hidden">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h3 class="loading-title">Loading Courses...</h3>
+            <p class="loading-subtitle">Preparing your learning experience</p>
+        </div>
+    </div>
+    
+    <!-- Course Loading Screen -->
+    <div id="course-loading-screen" class="loading-screen hidden">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h3 class="loading-title" id="course-loading-title">Loading Course...</h3>
+            <p class="loading-subtitle">Preparing your quiz questions</p>
+        </div>
+    </div>
+
+    <!-- Fixed Navigation Bar -->
+    <nav class="navbar hidden">
+        <div class="nav-left">
+            <button id="menu-btn" class="nav-btn">
+                <i class="fas fa-bars"></i>
+                <span>Menu</span>
+            </button>
+        </div>
+        
+        <div class="nav-center">
+        </div>
+        
+        <div class="nav-right">
+            <button id="home-btn" class="nav-btn">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </button>
+            <button class="nav-btn" id="about-btn">
+                <i class="fas fa-info-circle"></i>
+                <span>About</span>
+            </button>
+            <button class="nav-btn" id="policy-btn">
+                <i class="fas fa-file-contract"></i>
+                <span>Policy</span>
+            </button>
+            <button class="nav-btn" id="disclaimer-btn">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>Disclaimer</span>
+            </button>
+            <button class="nav-btn" id="terms-btn">
+                <i class="fas fa-balance-scale"></i>
+                <span>Terms</span>
+            </button>
+        </div>
+    </nav>
+    
+    <!-- Menu Dropdown -->
+    <div id="menu-dropdown" class="hidden fixed top-16 left-5 bg-gray-800 rounded-lg shadow-lg z-50 w-60">
+        <button class="w-full text-left px-4 py-3 hover:bg-gray-700 flex items-center" id="theme-menu-btn">
+            <i class="fas fa-palette mr-3"></i> Theme
+        </button>
+        <button class="w-full text-left px-4 py-3 hover:bg-gray-700 flex items-center" id="stats-menu-btn">
+            <i class="fas fa-chart-bar mr-3"></i> Course Stats
+        </button>
+    </div>
+
+    <!-- Main Quiz Container -->
+    <div class="glass-panel hidden" id="main-container">
+        <!-- Start Screen -->
+        <div id="start-screen" class="p-4 md:p-8 lg:p-12 text-center relative">
+            <h1 class="app-title flex items-center justify-center gap-3 text-4xl md:text-5xl font-bold mb-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-brain text-white text-xl"></i>
+                </div>
+                biomed<span class="bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">IQ</span>
+            </h1>
+            <p class="text-gray-300 mb-6 max-w-2xl mx-auto mt-6">Master biomedical sciences with our comprehensive courses. Track your progress and visualize your learning journey!</p>
+            
+            <div class="flex justify-center mb-6">
+                <div class="w-24 h-24 rounded-2xl bg-primary/20 flex items-center justify-center mx-2 animate-pulse">
+                    <i class="fas fa-microscope text-3xl text-primary"></i>
+                </div>
+                <div class="w-24 h-24 rounded-2xl bg-accent/20 flex items-center justify-center mx-2 animate-pulse delay-300">
+                    <i class="fas fa-dna text-3xl text-accent"></i>
+                </div>
+                <div class="w-24 h-24 rounded-2xl bg-success/20 flex items-center justify-center mx-2 animate-pulse delay-700">
+                    <i class="fas fa-heartbeat text-3xl text-success"></i>
+                </div>
+            </div>
+            
+            <div class="mb-12" style="width: 90%; margin: 0 auto;">
+                <div class="progress-label">
+                    <span>Overall Mastery</span>
+                    <span id="overall-progress-value">0%</span>
+                </div>
+                <div class="progress-container" style="width: 100%;">
+                    <div id="overall-progress" class="progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+            
+            <h2 class="text-xl font-semibold mb-4 text-gray-300 mt-6">Select a Course</h2>
+            
+            <div class="max-w-md mx-auto mb-6">
+                <div class="relative">
+                    <input type="text" id="course-search" placeholder="Search courses..." class="w-full px-4 py-3 pl-12 bg-white/10 border border-white/20 rounded-full text-white placeholder-gray-400 focus:outline-none focus:border-primary focus:bg-white/15 transition-all">
+                    <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                </div>
+            </div>
+            
+            <div id="courses" class="course-grid">
+                <!-- Courses will be populated by JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="hidden p-4 md:p-6 lg:p-8 relative">
+            <div class="flex justify-between items-center mb-6">
+                <button class="nav-btn" onclick="saveProgressAndGoHome()">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </button>
+                
+                <div class="text-sm font-medium text-gray-300">
+                    Question <span id="current-question">1</span>/<span id="total-questions">10</span>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <div class="timer-container flex items-center gap-2">
+                        <span class="text-sm text-gray-300">Time:</span>
+                        <div id="timer" class="px-3 py-1 rounded-full font-bold transition-colors duration-300 bg-primary/20 text-primary">15</div>
+                    </div>
+                    
+                    <div class="score-display flex items-center gap-2">
+                        <span class="text-sm text-gray-300">Score:</span>
+                        <span id="score" class="font-bold text-primary bg-primary/20 px-3 py-1 rounded-full">0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm text-gray-300">Progress</span>
+                    <span id="progress-percentage" class="text-sm font-medium text-primary">10%</span>
+                </div>
+                <div class="w-full bg-white/10 rounded-full h-3">
+                    <div id="progress" class="progress-fill h-3 rounded-full transition-all duration-500" style="width: 10%"></div>
+                </div>
+            </div>
+            
+            <div class="question-box mb-6">
+                <div class="text-sm text-gray-400 mb-2">Question <span id="question-number">1</span></div>
+                <div id="question" class="text-xl md:text-2xl font-medium mb-6"></div>
+                
+                <div id="options" class="options-container"></div>
+            </div>
+            
+            <div id="explanation-section" class="hidden mb-4">
+                <div class="bg-gradient-to-r from-orange-500/20 to-amber-500/20 border border-orange-400/30 rounded-lg p-4 backdrop-blur-sm">
+                    <div class="flex items-start gap-3">
+                        <div class="bg-orange-500/30 p-2 rounded-full flex-shrink-0">
+                            <i class="fas fa-lightbulb text-sm" style="color: #fb923c;"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-orange-200 mb-2 text-base">Explanation</h4>
+                            <p id="explanation-text" class="text-gray-200 leading-relaxed text-sm"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-end">
+                <button id="next-btn" class="btn btn-primary opacity-0 invisible">
+                    Next Question <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Results Screen -->
+        <div id="results-screen" class="hidden p-4 md:p-8 lg:p-10 text-center relative">
+            <button class="absolute top-4 left-4 nav-btn" onclick="showStartScreen()">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </button>
+            
+            <div class="mb-8">
+                <div class="w-24 h-24 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
+                    <i class="fas fa-trophy text-4xl text-white"></i>
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent mb-3">Course Completed!</h2>
+                <div class="text-xl text-gray-300" id="course-name">Course: Immunology</div>
+            </div>
+            
+            <div class="bg-gradient-to-r from-green-500/20 to-blue-500/20 border border-green-400/30 rounded-2xl p-6 mb-8 backdrop-blur-sm">
+                <div class="flex items-center justify-center gap-3 mb-4">
+                    <div class="w-12 h-12 bg-green-500/30 rounded-full flex items-center justify-center">
+                        <i class="fas fa-check text-green-300 text-xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-green-200">🎉 Congratulations!</h3>
+                </div>
+                <p class="text-gray-200 text-lg">You've successfully completed this course. Great job on your learning journey!</p>
+            </div>
+            
+            <div class="text-6xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-8" id="final-score">0/10</div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-gradient-to-br from-green-500/20 to-green-600/20 border border-green-400/30 rounded-xl p-6 backdrop-blur-sm">
+                    <div class="w-12 h-12 bg-green-500/30 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-check-circle text-green-300 text-xl"></i>
+                    </div>
+                    <div class="text-lg font-medium text-green-200 mb-2">Correct Answers</div>
+                    <div id="correct-answers" class="text-3xl font-bold text-green-100">0</div>
+                </div>
+                
+                <div class="bg-gradient-to-br from-red-500/20 to-red-600/20 border border-red-400/30 rounded-xl p-6 backdrop-blur-sm">
+                    <div class="w-12 h-12 bg-red-500/30 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-times-circle text-red-300 text-xl"></i>
+                    </div>
+                    <div class="text-lg font-medium text-red-200 mb-2">Incorrect Answers</div>
+                    <div id="incorrect-answers" class="text-3xl font-bold text-red-100">0</div>
+                </div>
+                
+                <div class="bg-gradient-to-br from-purple-500/20 to-purple-600/20 border border-purple-400/30 rounded-xl p-6 backdrop-blur-sm">
+                    <div class="w-12 h-12 bg-purple-500/30 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-percentage text-purple-300 text-xl"></i>
+                    </div>
+                    <div class="text-lg font-medium text-purple-200 mb-2">Final Score</div>
+                    <div id="percentage-score" class="text-3xl font-bold text-purple-100">0%</div>
+                </div>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <button id="restart-btn" class="btn btn-primary px-8 py-3 text-lg">
+                    <i class="fas fa-redo mr-3"></i> Restart Course
+                </button>
+                <button id="new-course-btn" class="btn btn-secondary px-8 py-3 text-lg">
+                    <i class="fas fa-list mr-3"></i> Choose New Course
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Theme Modal -->
+    <div id="theme-modal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">Select Theme</h2>
+                <button id="close-theme" class="close-btn">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="theme-options">
+                <div class="theme-option" id="dark-theme-option">
+                    <div class="theme-icon bg-blue-500">
+                        <i class="fas fa-moon"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold">Dark Theme</h3>
+                        <p class="text-sm text-gray-400">Default theme with dark background</p>
+                    </div>
+                </div>
+                
+                <div class="theme-option" id="light-theme-option">
+                    <div class="theme-icon bg-yellow-400">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold">Light Theme</h3>
+                        <p class="text-sm text-gray-400">Bright theme with light background</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Stats Modal -->
+    <div id="stats-modal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-chart-bar text-white"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold">Course Statistics</h2>
+                </div>
+                <button id="close-stats" class="close-btn">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-400/30 rounded-xl p-4 text-center">
+                    <div class="text-2xl font-bold text-blue-300" id="total-courses">0</div>
+                    <div class="text-sm text-gray-300">Total Courses</div>
+                </div>
+                <div class="bg-gradient-to-br from-green-500/20 to-green-600/20 border border-green-400/30 rounded-xl p-4 text-center">
+                    <div class="text-2xl font-bold text-green-300" id="completed-courses">0</div>
+                    <div class="text-sm text-gray-300">Completed</div>
+                </div>
+                <div class="bg-gradient-to-br from-orange-500/20 to-orange-600/20 border border-orange-400/30 rounded-xl p-4 text-center">
+                    <div class="text-2xl font-bold text-orange-300" id="in-progress-courses">0</div>
+                    <div class="text-sm text-gray-300">In Progress</div>
+                </div>
+                <div class="bg-gradient-to-br from-purple-500/20 to-purple-600/20 border border-purple-400/30 rounded-xl p-4 text-center">
+                    <div class="text-2xl font-bold text-purple-300" id="overall-accuracy">0%</div>
+                    <div class="text-sm text-gray-300">Avg. Accuracy</div>
+                </div>
+            </div>
+            
+            <div class="stats-container">
+                <canvas id="stats-chart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+
+
+    <script src="js/courseLoader.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

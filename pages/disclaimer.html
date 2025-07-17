@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disclaimer - biomedIQ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            padding-top: 80px;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(15px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            padding: 3rem;
+        }
+        
+        .light-theme .container {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            color: #334155;
+        }
+        
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 2rem;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .light-theme .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 1px solid #e2e8f0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            height: 42px;
+            padding: 0 1.5rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        .light-theme .nav-btn {
+            background: rgba(248, 250, 252, 0.8);
+            color: #334155;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .nav-btn:hover {
+            background: rgba(59, 130, 246, 0.2);
+            transform: translateY(-1px);
+        }
+        
+        .nav-btn.active {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+        }
+        
+        .light-theme .nav-btn.active {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .page-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .title-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            animation: warning-pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes warning-pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+        }
+        
+        .title-text {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .content-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .content-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+        
+        .light-theme .content-card {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid #e2e8f0;
+        }
+        
+        .content-text {
+            line-height: 1.7;
+            color: #e2e8f0;
+            font-size: 1.1rem;
+        }
+        
+        .light-theme .content-text {
+            color: #475569;
+        }
+        
+        .warning-card {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(239, 68, 68, 0.1));
+            border: 2px solid rgba(245, 158, 11, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .warning-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #f59e0b, #ef4444);
+        }
+        
+        .warning-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            border-radius: 50%;
+            color: white;
+            font-size: 1.2rem;
+            margin-right: 1rem;
+            animation: warning-pulse 2s ease-in-out infinite;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 1rem;
+                padding: 2rem;
+            }
+            
+            .title-text {
+                font-size: 2.5rem;
+            }
+            
+            .title-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+            
+            .nav-links {
+                gap: 0.5rem;
+            }
+            
+            .nav-btn {
+                padding: 0 1rem;
+                font-size: 0.8rem;
+            }
+            
+            .nav-btn span {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-links">
+            <a href="../index.html#skip-welcome" class="nav-btn">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="about.html" class="nav-btn">
+                <i class="fas fa-info-circle"></i>
+                <span>About</span>
+            </a>
+            <a href="policy.html" class="nav-btn">
+                <i class="fas fa-shield-alt"></i>
+                <span>Policy</span>
+            </a>
+            <a href="disclaimer.html" class="nav-btn active">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>Disclaimer</span>
+            </a>
+            <a href="terms.html" class="nav-btn">
+                <i class="fas fa-balance-scale"></i>
+                <span>Terms</span>
+            </a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="header">
+            <div class="page-title">
+                <div class="title-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="title-text">Disclaimer</div>
+            </div>
+        </div>
+        
+        <div class="warning-card">
+            <div class="content-text">
+                <span class="warning-icon">
+                    <i class="fas fa-info-circle"></i>
+                </span>
+                All content provided on <strong>biomedIQ</strong> is intended for general educational and informational purposes only.
+            </div>
+        </div>
+        
+        <div class="content-card">
+            <div class="content-text">
+                We do not guarantee the accuracy, completeness, or reliability of any content. The information should not be taken as professional medical or academic advice.
+            </div>
+        </div>
+        
+        <div class="content-card">
+            <div class="content-text">
+                While we strive to keep content current and accurate, <strong>biomedIQ</strong> is not liable for any errors, omissions, or consequences resulting from the use of information provided on this platform.
+            </div>
+        </div>
+        
+        <div class="warning-card">
+            <div class="content-text">
+                <span class="warning-icon">
+                    <i class="fas fa-user-md"></i>
+                </span>
+                Always consult qualified academic advisors or healthcare professionals for advice specific to your educational or medical needs.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const theme = localStorage.getItem('theme') || 'default';
+        if (theme === 'light') {
+            document.body.classList.add('light-theme');
+        }
+    </script>
+</body>
+</html>
