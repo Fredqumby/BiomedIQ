@@ -585,6 +585,10 @@ function showStartScreen() {
     renderCourses();
     showScreen('start');
     updateActiveNavButton();
+    
+    // Ensure welcome screen is hidden when returning to home
+    const welcomeScreen = document.getElementById('welcome-screen');
+    if (welcomeScreen) welcomeScreen.classList.add('hidden');
 }
 
 // Update active navigation button
@@ -1128,7 +1132,7 @@ function startFromWelcome() {
         console.log('Loading screen shown');
     }
     
-    // Reduced timeout from 2000ms to 500ms for faster transition
+    // Reduced timeout for faster transition
     setTimeout(async () => {
         if (loadingEl) {
             loadingEl.classList.add('hidden');
@@ -1147,7 +1151,7 @@ function startFromWelcome() {
         
         await initAcademy();
         console.log('Academy initialized');
-    }, 500);
+    }, 300);
 }
 
 // Update a single course card
@@ -1241,9 +1245,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (mainContainer) mainContainer.classList.remove('hidden');
         const navbar = document.querySelector('.navbar');
         if (navbar) navbar.classList.remove('hidden');
-        initAcademy();
-        // Clear the hash
-        history.replaceState(null, null, ' ');
+        // Ensure the welcome screen is completely hidden before initializing
+        setTimeout(() => {
+            initAcademy();
+            // Don't clear the hash to maintain state across page loads
+        }, 0);
     } else {
         // Start with welcome screen visible
         if (welcomeScreen) {
