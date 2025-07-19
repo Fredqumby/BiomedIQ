@@ -542,6 +542,9 @@ async function startCourse(courseKey, action) {
             userAnswers = [];
             
             showScreen('quiz');
+            // Ensure ads are hidden
+            const adBanner = document.querySelector('.ad-banner');
+            if (adBanner) adBanner.style.display = 'none';
             loadQuestion();
             
         } catch (error) {
@@ -558,17 +561,50 @@ async function startCourse(courseKey, action) {
 
 // Show screen
 function showScreen(screenName) {
-    if (startScreen) startScreen.classList.toggle('hidden', screenName !== 'start');
-    if (quizScreen) quizScreen.classList.toggle('hidden', screenName !== 'quiz');
-    if (resultsScreen) resultsScreen.classList.toggle('hidden', screenName !== 'results');
+    // First hide all screens completely
+    if (startScreen) {
+        startScreen.classList.add('hidden');
+        startScreen.style.display = 'none';
+    }
+    if (quizScreen) {
+        quizScreen.classList.add('hidden');
+        quizScreen.style.display = 'none';
+    }
+    if (resultsScreen) {
+        resultsScreen.classList.add('hidden');
+        resultsScreen.style.display = 'none';
+    }
+    
+    // Then show only the active screen
+    if (screenName === 'start' && startScreen) {
+        startScreen.classList.remove('hidden');
+        startScreen.style.display = 'block';
+    }
+    if (screenName === 'quiz' && quizScreen) {
+        quizScreen.classList.remove('hidden');
+        quizScreen.style.display = 'block';
+    }
+    if (screenName === 'results' && resultsScreen) {
+        resultsScreen.classList.remove('hidden');
+        resultsScreen.style.display = 'block';
+    }
     
     // Show/hide navbar based on screen
     const navbar = document.querySelector('.navbar');
-    if (screenName === 'quiz' || screenName === 'results') {
+    const adBanner = document.querySelector('.ad-banner');
+    
+    if (screenName === 'quiz') {
         if (navbar) navbar.style.display = 'none';
+        if (adBanner) adBanner.style.display = 'none';
+        document.body.classList.add('quiz-active');
+        document.body.classList.remove('home-active');
+    } else if (screenName === 'results') {
+        if (navbar) navbar.style.display = 'none';
+        if (adBanner) adBanner.style.display = 'flex';
         document.body.classList.remove('quiz-active', 'home-active');
     } else {
         if (navbar) navbar.style.display = 'flex';
+        if (adBanner) adBanner.style.display = 'flex';
         document.body.classList.remove('quiz-active');
         document.body.classList.add('home-active');
         // Refresh course display when returning to start screen
@@ -802,7 +838,12 @@ function handleTimeExpired() {
         explanationSection.classList.remove('hidden');
     }
     
-    if (nextBtn) nextBtn.classList.remove('opacity-0', 'invisible');
+    if (nextBtn) {
+        nextBtn.classList.remove('opacity-0', 'invisible');
+        // Make sure the next button is visible without scrolling
+        const quizFooter = document.querySelector('.quiz-footer');
+        if (quizFooter) quizFooter.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
 }
 
 // Select Answer
@@ -851,9 +892,14 @@ function selectAnswer(selectedOption, correctAnswer) {
         explanationSection.classList.remove('hidden');
     }
     
+    // Show next button immediately to avoid scrolling issues
+    if (nextBtn) nextBtn.classList.remove('opacity-0', 'invisible');
+    
+    // Make sure the next button is visible without scrolling
     setTimeout(() => {
-        if (nextBtn) nextBtn.classList.remove('opacity-0', 'invisible');
-    }, 500);
+        const quizFooter = document.querySelector('.quiz-footer');
+        if (quizFooter) quizFooter.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 100);
 }
 
 // Next Question
@@ -1235,6 +1281,8 @@ function updateCourseCard(courseKey) {
         }
     }
 }
+
+// No ad management functions needed
 
 // Initialize academy on load
 document.addEventListener('DOMContentLoaded', () => {
